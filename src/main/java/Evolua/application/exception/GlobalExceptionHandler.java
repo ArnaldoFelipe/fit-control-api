@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import Evolua.application.exception.dto.ErroResponse;
+import Evolua.application.exception.planoTreino.PlanoTreinoNaoEncontradoException;
 import Evolua.application.exception.usuario.EmailJaCadastradoException;
 import Evolua.application.exception.usuario.UsuarioNaoEncontradoException;
 
@@ -50,6 +51,17 @@ public class GlobalExceptionHandler {
                 .body(new ErroResponse(
                     mensagem,
                     "VALIDACAO_INVALIDA",
+                    LocalDateTime.now()
+                ));
+    }
+
+    @ExceptionHandler(PlanoTreinoNaoEncontradoException.class)
+    public ResponseEntity<ErroResponse> handlePlanoTreinoNaoEncontrado(PlanoTreinoNaoEncontradoException ex){
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErroResponse(
+                    ex.getMessage(),
+                    "USUARIO_NAO_POSSUI_PLANO_ATIVO",
                     LocalDateTime.now()
                 ));
     }

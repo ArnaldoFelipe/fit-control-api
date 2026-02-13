@@ -31,7 +31,7 @@ public class PlanoTreino {
     private Integer diasPorSemana;
 
     @Enumerated(EnumType.STRING)
-    private VolumeTreino VolumeTreino;
+    private VolumeTreino volumeTreino;
 
     private boolean ativo;
 
@@ -49,7 +49,7 @@ public class PlanoTreino {
         this.usuario = usuario;
         this.objetivoFitness = objetivoFitness;
         this.diasPorSemana = diasPorSemana;
-        VolumeTreino = volumeTreino;
+        this.volumeTreino = volumeTreino;
         this.ativo = ativo;
     }
 
@@ -86,11 +86,11 @@ public class PlanoTreino {
     }
 
     public VolumeTreino getVolumeTreino() {
-        return VolumeTreino;
+        return volumeTreino;
     }
 
     public void setVolumeTreino(VolumeTreino volumeTreino) {
-        VolumeTreino = volumeTreino;
+        this.volumeTreino = volumeTreino;
     }
 
     public boolean isAtivo() {
