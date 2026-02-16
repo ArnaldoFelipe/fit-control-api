@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import Evolua.application.entities.dto.planoTreino.AtualizarPlanoRequest;
 import Evolua.application.entities.dto.planoTreino.PlanoTreinoRequest;
 import Evolua.application.entities.dto.planoTreino.PlanoTreinoResponse;
 import Evolua.application.services.PlanoTreinoService;
@@ -33,5 +35,11 @@ public class PlanoTreinoController {
     public ResponseEntity<PlanoTreinoResponse> buscarPlanoAtivo(@Positive @PathVariable Long usuarioId){
         PlanoTreinoResponse planoAtivo = planoTreinoService.buscarPlanoAtivoPorUsuario(usuarioId);
         return ResponseEntity.ok(planoAtivo);
+    }
+
+    @PatchMapping("/atualizar/{id}")
+    public ResponseEntity<PlanoTreinoResponse> atualizarPlano(@PathVariable Long id, @RequestBody AtualizarPlanoRequest request){
+        PlanoTreinoResponse plano = planoTreinoService.atualizarPlano(id, request);
+        return ResponseEntity.ok(plano);
     }
 }

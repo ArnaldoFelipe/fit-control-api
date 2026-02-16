@@ -37,8 +37,7 @@ public class InteracaoChat {
 
     public InteracaoChat(){}
 
-    public InteracaoChat(Long id, Usuario usuario, String menssagemUsuario, String respostaIA) {
-        this.id = id;
+    public InteracaoChat(Usuario usuario, String menssagemUsuario, String respostaIA) {
         this.usuario = usuario;
         this.menssagemUsuario = menssagemUsuario;
         this.respostaIA = respostaIA;

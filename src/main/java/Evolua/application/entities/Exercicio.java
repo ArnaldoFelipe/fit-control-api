@@ -1,6 +1,7 @@
 package Evolua.application.entities;
 
 import Evolua.application.entities.enums.GrupoMuscular;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,6 +16,7 @@ public class Exercicio {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "exercicio_id")
     private Long id;
 
     private String nome;
@@ -24,8 +26,7 @@ public class Exercicio {
 
     public Exercicio(){}
 
-    public Exercicio(Long id, String nome, GrupoMuscular grupoMuscular) {
-        this.id = id;
+    public Exercicio(String nome, GrupoMuscular grupoMuscular) {
         this.nome = nome;
         this.grupoMuscular = grupoMuscular;
     }

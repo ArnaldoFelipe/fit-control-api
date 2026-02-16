@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import Evolua.application.exception.dto.ErroResponse;
+import Evolua.application.exception.planoTreino.DiasDuplicadosException;
+import Evolua.application.exception.planoTreino.PlanoInvalidoException;
 import Evolua.application.exception.planoTreino.PlanoTreinoNaoEncontradoException;
 import Evolua.application.exception.usuario.EmailJaCadastradoException;
 import Evolua.application.exception.usuario.UsuarioNaoEncontradoException;
@@ -62,6 +64,28 @@ public class GlobalExceptionHandler {
                 .body(new ErroResponse(
                     ex.getMessage(),
                     "USUARIO_NAO_POSSUI_PLANO_ATIVO",
+                    LocalDateTime.now()
+                ));
+    }
+
+    @ExceptionHandler(DiasDuplicadosException.class)
+    public ResponseEntity<ErroResponse> handleDiasDuplicados(DiasDuplicadosException ex){
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ErroResponse(
+                    ex.getMessage(),
+                    "DIAS_NAO_PODEM_SER_DUPLICADOS",
+                    LocalDateTime.now()
+                ));
+    }
+
+    @ExceptionHandler(PlanoInvalidoException.class)
+    public ResponseEntity<ErroResponse> handlePlanoInvalido(PlanoInvalidoException ex){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErroResponse(
+                    ex.getMessage(),
+                    "PLANO_DEVE_CONTER_DIAS",
                     LocalDateTime.now()
                 ));
     }

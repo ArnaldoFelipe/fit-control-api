@@ -2,11 +2,8 @@ package Evolua.application.entities;
 
 import java.time.LocalDateTime;
 
-import Evolua.application.entities.enums.ObjetivoFitness;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +17,7 @@ public class Usuario {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "usuario_id")
     private Long id;
 
     @Column(nullable = false)
@@ -31,9 +29,6 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    private ObjetivoFitness objetivo;
-
     private LocalDateTime dataCriacao;
 
     @PrePersist
@@ -43,12 +38,10 @@ public class Usuario {
 
     public Usuario(){}
 
-    public Usuario(Long id, String nome, String senha, String email, ObjetivoFitness objetivo) {
-        this.id = id;
+    public Usuario(String nome, String senha, String email) {
         this.nome = nome;
         this.senha = senha;
         this.email = email;
-        this.objetivo = objetivo;
     }
 
     public Long getId() {
@@ -81,14 +74,6 @@ public class Usuario {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public ObjetivoFitness getObjetivo() {
-        return objetivo;
-    }
-
-    public void setObjetivo(ObjetivoFitness objetivo) {
-        this.objetivo = objetivo;
     }
 
     public LocalDateTime getDataCriacao() {

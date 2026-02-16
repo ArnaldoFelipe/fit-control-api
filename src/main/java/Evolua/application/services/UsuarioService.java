@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import Evolua.application.entities.Usuario;
 import Evolua.application.entities.dto.usuario.UsuarioRequest;
 import Evolua.application.entities.dto.usuario.UsuarioResponse;
-import Evolua.application.entities.enums.ObjetivoFitness;
 import Evolua.application.exception.usuario.EmailJaCadastradoException;
 import Evolua.application.exception.usuario.UsuarioNaoEncontradoException;
 import Evolua.application.repository.UsuarioRepository;
@@ -22,8 +21,7 @@ public class UsuarioService {
         return new UsuarioResponse(
             usuario.getId(),
             usuario.getNome(),
-            usuario.getEmail(),
-            usuario.getObjetivo()
+            usuario.getEmail()
         );
     }
 
@@ -32,7 +30,6 @@ public class UsuarioService {
             usuario.setNome(request.nome());
             usuario.setSenha(request.senha());
             usuario.setEmail(request.email());
-            usuario.setObjetivo(request.objetivo());
         
         return usuario;
     }
@@ -65,11 +62,4 @@ public class UsuarioService {
         return toResponse(usuario);
     }
 
-    @Transactional
-    public void alterarObjetivo(Long usuarioId, ObjetivoFitness novoObjetivo){
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new UsuarioNaoEncontradoException( "Usuário com id " + usuarioId + " não encontrado"));
-        
-        usuario.setObjetivo(novoObjetivo);
-    }
 }

@@ -1,33 +1,42 @@
 package Evolua.application.entities;
 
 import Evolua.application.entities.enums.DiaDaSemana;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "dia_treino")
+@Table(name = "dia_treino",
+       uniqueConstraints = @UniqueConstraint(
+            columnNames = {"plano_id", "diaDaSemana"}
+       )
+)
 public class DiaTreino {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "dia_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "plano_id", nullable = false)
     private PlanoTreino planoTreino;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private DiaDaSemana diaDaSemana;
 
     public DiaTreino(){}
 
-    public DiaTreino(Long id, PlanoTreino planoTreino, DiaDaSemana diaDaSemana) {
-        this.id = id;
+    public DiaTreino(PlanoTreino planoTreino, DiaDaSemana diaDaSemana) {
         this.planoTreino = planoTreino;
         this.diaDaSemana = diaDaSemana;
     }

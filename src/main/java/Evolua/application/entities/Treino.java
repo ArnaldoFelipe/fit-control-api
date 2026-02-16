@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -16,23 +17,24 @@ public class Treino {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "dia_id", nullable = false)
     private DiaTreino diaTreino;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "exercicio_id", nullable = false)
     private Exercicio exercicio;
 
     private Integer series;
-    private Integer repticoes;
+    private Integer repeticoes;
     
     public Treino(){}
 
-    public Treino(Long id, DiaTreino diaTreino, Exercicio exercicio, Integer series, Integer repticoes) {
-        this.id = id;
+    public Treino(DiaTreino diaTreino, Exercicio exercicio, Integer series, Integer repeticoes) {
         this.diaTreino = diaTreino;
         this.exercicio = exercicio;
         this.series = series;
-        this.repticoes = repticoes;
+        this.repeticoes = repeticoes;
     }
 
     public Long getId() {
@@ -68,11 +70,11 @@ public class Treino {
     }
 
     public Integer getRepticoes() {
-        return repticoes;
+        return repeticoes;
     }
 
-    public void setRepticoes(Integer repticoes) {
-        this.repticoes = repticoes;
+    public void setRepticoes(Integer repeticoes) {
+        this.repeticoes = repeticoes;
     }
 
     @Override

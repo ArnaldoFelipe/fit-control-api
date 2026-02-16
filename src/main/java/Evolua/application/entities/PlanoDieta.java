@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -22,6 +23,7 @@ public class PlanoDieta {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)
@@ -40,9 +42,8 @@ public class PlanoDieta {
 
     public PlanoDieta(){}
 
-    public PlanoDieta(Long id, Usuario usuario, ObjetivoFitness objetivoFitness, Integer caloriasDiarias,
+    public PlanoDieta(Usuario usuario, ObjetivoFitness objetivoFitness, Integer caloriasDiarias,
             Boolean ativo) {
-        this.id = id;
         this.usuario = usuario;
         this.objetivoFitness = objetivoFitness;
         this.caloriasDiarias = caloriasDiarias;
