@@ -9,6 +9,7 @@ import java.util.Set;
 import Evolua.application.entities.enums.DiaDaSemana;
 import Evolua.application.entities.enums.ObjetivoFitness;
 import Evolua.application.entities.enums.VolumeTreino;
+import Evolua.application.exception.planoTreino.DiaTreinoNaoEncontradoException;
 import Evolua.application.exception.planoTreino.DiasDuplicadosException;
 import Evolua.application.exception.planoTreino.PlanoInvalidoException;
 import jakarta.persistence.CascadeType;
@@ -67,15 +68,23 @@ public class PlanoTreino {
 
         validarDias(diasSemana);
 
+        if(usuario == null){
+            throw new PlanoInvalidoException("usuario é obrigatorio");
+        }
+        if(objetivoFitness == null){
+            throw new PlanoInvalidoException("objetivo é obrigatorio");
+        }
+        if(volumeTreino == null){
+            throw new PlanoInvalidoException("volume é obrigatorio");
+        }
+
         this.usuario = usuario;
         this.objetivoFitness = objetivoFitness;
         this.volumeTreino = volumeTreino;
         this.ativo = true;
 
         for (DiaDaSemana diaSemana : diasSemana){
-            DiaTreino dia = new DiaTreino();
-            dia.setDiaDaSemana(diaSemana);
-            this.adicionarDia(dia);
+            adicionarDia(diaSemana);
         }
     }
 
@@ -83,32 +92,16 @@ public class PlanoTreino {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Usuario getUsuario() {
         return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
 
     public ObjetivoFitness getObjetivoFitness() {
         return objetivoFitness;
     }
 
-    public void setObjetivoFitness(ObjetivoFitness objetivoFitness) {
-        this.objetivoFitness = objetivoFitness;
-    }
-
     public VolumeTreino getVolumeTreino() {
         return volumeTreino;
-    }
-
-    public void setVolumeTreino(VolumeTreino volumeTreino) {
-        this.volumeTreino = volumeTreino;
     }
 
     public boolean isAtivo() {
@@ -123,19 +116,8 @@ public class PlanoTreino {
         return dataCriacao;
     }
 
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
     public List<DiaTreino> getDias() {
-        return dias;
-    }
-
-    public void setDias(List<DiaTreino> dias) {
-        this.dias.clear();
-        for (DiaTreino dia : dias){
-            adicionarDia(dia);
-        }
+        return List.copyOf(dias);
     }
 
     @Override
@@ -163,9 +145,17 @@ public class PlanoTreino {
         return true;
     }
 
-    public void adicionarDia(DiaTreino dia) {
-    dias.add(dia);
-    dia.setPlanoTreino(this);
+    public void adicionarDia(DiaDaSemana diaSemana) {
+
+        boolean jaExiste = dias.stream()
+            .anyMatch(d -> d.getDiaDaSemana().equals(diaSemana));
+
+        if(jaExiste){
+            throw new DiasDuplicadosException("dia ja existe no plano");
+        }
+
+        DiaTreino dia = new DiaTreino(this, diaSemana);
+        dias.add(dia);
     }
 
     private void validarDias(List<DiaDaSemana> diasSemana){
@@ -174,7 +164,7 @@ public class PlanoTreino {
             throw new PlanoInvalidoException("Plano deve possuir pelo menos um dia");
         }
 
-        Set<DiaDaSemana> diasUnicos = new HashSet<>();
+        Set<DiaDaSemana> diasUnicos = new HashSet<>(diasSemana);
 
         if(diasUnicos.size() != diasSemana.size()){
             throw new DiasDuplicadosException("Dias de treino não podem ser repetidos");
@@ -187,9 +177,7 @@ public class PlanoTreino {
         this.dias.clear();
 
         for(DiaDaSemana diaSemana : novosDias){
-            DiaTreino dia = new DiaTreino();
-            dia.setDiaDaSemana(diaSemana);
-            this.adicionarDia(dia);
+            adicionarDia(diaSemana);
         }
     }
 
@@ -201,11 +189,26 @@ public class PlanoTreino {
         this.volumeTreino = novVolume;
     }
 
-    public void atulizarObjetivo(ObjetivoFitness novoObjetivo){
+    public void atualizarObjetivo(ObjetivoFitness novoObjetivo){
         if(novoObjetivo == null){
             throw new PlanoInvalidoException("Objetivo não pode ser nulo");
         }
 
         this.objetivoFitness = novoObjetivo;
+    }
+
+    public DiaTreino buscarDia(DiaDaSemana diaSemana){
+        return dias.stream()
+            .filter(d -> d.getDiaDaSemana().equals(diaSemana))
+            .findFirst()
+            .orElseThrow(() -> new DiaTreinoNaoEncontradoException("Dia não encontrado no plano"));
+    }
+
+    public void ativar(){
+        this.ativo = true;
+    }
+
+    public void desativar(){
+        this.ativo = false;
     }
 }

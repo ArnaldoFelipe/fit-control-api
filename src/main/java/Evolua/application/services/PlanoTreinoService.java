@@ -6,14 +6,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import Evolua.application.entities.DiaTreino;
+import Evolua.application.entities.Exercicio;
 import Evolua.application.entities.PlanoTreino;
+import Evolua.application.entities.Treino;
 import Evolua.application.entities.Usuario;
 import Evolua.application.entities.dto.planoTreino.AtualizarPlanoRequest;
 import Evolua.application.entities.dto.planoTreino.PlanoTreinoRequest;
 import Evolua.application.entities.dto.planoTreino.PlanoTreinoResponse;
+import Evolua.application.entities.dto.treino.AtualizarTreinoRequest;
+import Evolua.application.entities.dto.treino.TreinoRequest;
+import Evolua.application.entities.dto.treino.TreinoResponse;
 import Evolua.application.entities.enums.DiaDaSemana;
+import Evolua.application.exception.exercicio.ExercicioNaoEncontradoException;
 import Evolua.application.exception.planoTreino.PlanoTreinoNaoEncontradoException;
 import Evolua.application.exception.usuario.UsuarioNaoEncontradoException;
+import Evolua.application.repository.ExercicioRepository;
 import Evolua.application.repository.PlanoTreinoRepository;
 import Evolua.application.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
@@ -22,12 +29,15 @@ import jakarta.transaction.Transactional;
 public class PlanoTreinoService {
     
     @Autowired
-    PlanoTreinoRepository planoTreinoRepository;
+    private PlanoTreinoRepository planoTreinoRepository;
 
     @Autowired
-    UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
 
-    PlanoTreinoResponse toResponse(PlanoTreino planoTreino){
+    @Autowired
+    private ExercicioRepository exercicioRepository;
+
+    PlanoTreinoResponse toPlanoResponse(PlanoTreino planoTreino){
 
         List<DiaDaSemana> dias = planoTreino.getDias()
             .stream()
@@ -45,14 +55,24 @@ public class PlanoTreinoService {
         );
     }
 
-    PlanoTreino toEntity(PlanoTreinoRequest request, Usuario usuario){
-        PlanoTreino planoTreino = new PlanoTreino();
-        planoTreino.setUsuario(usuario);
-        planoTreino.setObjetivoFitness(request.objetivoFitness());
-        planoTreino.setVolumeTreino(request.volumeTreino());
-        planoTreino.setAtivo(true);
+    PlanoTreino toPlanoEntity(PlanoTreinoRequest request, Usuario usuario){
+        return new PlanoTreino(
+            usuario,
+            request.objetivoFitness(),
+            request.volumeTreino(),
+            request.dias()
+        );
+    }
 
-        return planoTreino;
+    public TreinoResponse toTreinoResponse(Treino treino){
+        return new TreinoResponse(
+            treino.getId(),
+            treino.getDiaTreino().getId(),
+            treino.getExercicio().getId(),
+            treino.getExercicio().getNome(),
+            treino.getSeries(),
+            treino.getRepeticoes()
+        );
     }
 
     @Transactional
@@ -62,14 +82,14 @@ public class PlanoTreinoService {
         
         planoTreinoRepository.findByUsuarioAndAtivoTrue(usuario)
             .ifPresent(planoAtivo -> {
-                planoAtivo.setAtivo(false);
+                planoAtivo.desativar();
                 planoTreinoRepository.save(planoAtivo);
             });
 
-        PlanoTreino planoTreino = toEntity(request, usuario);
+        PlanoTreino planoTreino = toPlanoEntity(request, usuario);
         PlanoTreino planoSalvo = planoTreinoRepository.save(planoTreino);
 
-        return toResponse(planoSalvo);
+        return toPlanoResponse(planoSalvo);
     }
 
     public PlanoTreinoResponse buscarPlanoAtivoPorUsuario(Long usuarioId){
@@ -79,7 +99,7 @@ public class PlanoTreinoService {
         PlanoTreino plano = planoTreinoRepository.findByUsuarioAndAtivoTrue(usuario)
             .orElseThrow(() -> new PlanoTreinoNaoEncontradoException("Usuario não possui plano ativo"));
 
-        return toResponse(plano);
+        return toPlanoResponse(plano);
     }
 
     @Transactional
@@ -97,10 +117,66 @@ public class PlanoTreinoService {
         }
 
         if (request.objetivo() != null) {
-            plano.atulizarObjetivo(request.objetivo());
+            plano.atualizarObjetivo(request.objetivo());
         }
 
-        planoTreinoRepository.save(plano);
-        return toResponse(plano);
+        return toPlanoResponse(plano);
+    }
+
+    @Transactional
+    public TreinoResponse adicionarTreinoAoDia(Long planoId, DiaDaSemana diaSemana, TreinoRequest treino){
+
+        PlanoTreino planoTreino = planoTreinoRepository.findById(planoId)
+            .orElseThrow(() -> new PlanoTreinoNaoEncontradoException("Plano não encontrado"));
+
+        DiaTreino dia = planoTreino.buscarDia(diaSemana);
+
+        Exercicio exercicio = exercicioRepository.findById(treino.exercicioId())
+            .orElseThrow(() -> new ExercicioNaoEncontradoException("exercicio não encontrado"));
+
+        Treino treinoCriado = dia.adicionarTreino(exercicio, treino.series(), treino.repeticoes());
+
+        return toTreinoResponse(treinoCriado);
+    }
+
+    @Transactional
+    public TreinoResponse atualizarTreino(Long planoId, DiaDaSemana diaSemana, Long treinoId, AtualizarTreinoRequest treinoRequest){
+
+        PlanoTreino planoTreino = planoTreinoRepository.findById(planoId)
+            .orElseThrow(() -> new PlanoTreinoNaoEncontradoException("Plano não encontrado"));
+
+        DiaTreino dia = planoTreino.buscarDia(diaSemana);
+
+        Treino treino = dia.buscarTreinoPorId(treinoId);
+
+        Exercicio exercicio = null;
+        
+        if(treinoRequest.exercicioId() != null){
+            exercicio = exercicioRepository.findById(treinoRequest.exercicioId())
+                .orElseThrow(() -> new ExercicioNaoEncontradoException("exercicio não encontrado"));
+        }
+        treino.atualizar(exercicio, treinoRequest.series(), treinoRequest.repeticoes());
+
+        return toTreinoResponse(treino);
+    }
+
+    @Transactional
+    public void removerTreinoAoDia(Long planoId, DiaDaSemana diaSemana, Long treinoId){
+
+        PlanoTreino plano = planoTreinoRepository.findById(planoId)
+            .orElseThrow(() -> new PlanoTreinoNaoEncontradoException("Plano não encontrado"));
+        
+        DiaTreino dia = plano.buscarDia(diaSemana);
+
+        dia.removerTreino(treinoId);
+    }
+
+    public TreinoResponse buscarTreinoId(Long planoId, DiaDaSemana diaSemana, Long treinoId){
+        PlanoTreino plano = planoTreinoRepository.findById(planoId)
+            .orElseThrow(() -> new PlanoTreinoNaoEncontradoException("Plano não encontrado"));
+        DiaTreino dia = plano.buscarDia(diaSemana);
+
+        Treino treino = dia.buscarTreinoPorId(treinoId);
+        return toTreinoResponse(treino);
     }
 }

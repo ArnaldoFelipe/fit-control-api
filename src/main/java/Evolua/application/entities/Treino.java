@@ -1,6 +1,7 @@
 package Evolua.application.entities;
 
 
+import Evolua.application.exception.treino.TreinoInvalidoException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,6 +32,9 @@ public class Treino {
     public Treino(){}
 
     public Treino(DiaTreino diaTreino, Exercicio exercicio, Integer series, Integer repeticoes) {
+
+        validarTreino(diaTreino, exercicio, series, repeticoes);
+
         this.diaTreino = diaTreino;
         this.exercicio = exercicio;
         this.series = series;
@@ -41,40 +45,20 @@ public class Treino {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public DiaTreino getDiaTreino() {
         return diaTreino;
-    }
-
-    public void setDiaTreino(DiaTreino diaTreino) {
-        this.diaTreino = diaTreino;
     }
 
     public Exercicio getExercicio() {
         return exercicio;
     }
 
-    public void setExercicio(Exercicio exercicio) {
-        this.exercicio = exercicio;
-    }
-
     public Integer getSeries() {
         return series;
     }
 
-    public void setSeries(Integer series) {
-        this.series = series;
-    }
-
-    public Integer getRepticoes() {
+    public Integer getRepeticoes() {
         return repeticoes;
-    }
-
-    public void setRepticoes(Integer repeticoes) {
-        this.repeticoes = repeticoes;
     }
 
     @Override
@@ -100,5 +84,49 @@ public class Treino {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    private void validarTreino(DiaTreino diaTreino, Exercicio exercicio, Integer series, Integer repeticoes){
+
+        if(diaTreino == null){
+            throw new TreinoInvalidoException("Dia de treino é obrigatorio");
+        }
+        if(exercicio == null){
+            throw new TreinoInvalidoException("Exercicio é obrigatorio");
+        }
+        if(series == null || series <=0){
+            throw new TreinoInvalidoException("Quantidade de series é obrigatorio");
+        }
+        if(repeticoes == null || repeticoes <=0){
+            throw new TreinoInvalidoException("Quantidade de repetições é obrigatorio");
+        }
+    }
+
+    public Treino atualizar(Exercicio exercicio, Integer series, Integer repeticoes){
+
+        if (exercicio == null && series == null && repeticoes == null) {
+            throw new TreinoInvalidoException("Nenhum campo informado para atualização");
+        }
+        if(exercicio != null){
+            this.exercicio = exercicio;
+        }
+        if (series != null) {
+            if (series <= 0) {
+                throw new TreinoInvalidoException(
+                    "Quantidade de séries deve ser maior que zero"
+                );
+            }
+            this.series = series;
+        }
+        if (repeticoes != null) {
+            if (repeticoes <= 0) {
+                throw new TreinoInvalidoException(
+                    "Quantidade de repetições deve ser maior que zero"
+                );
+            }
+            this.repeticoes = repeticoes;
+        }
+
+        return this;
     }
 }

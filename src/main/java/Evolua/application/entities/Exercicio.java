@@ -22,6 +22,7 @@ public class Exercicio {
     private String nome;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "grupo_muscular")
     private GrupoMuscular grupoMuscular;
 
     public Exercicio(){}
