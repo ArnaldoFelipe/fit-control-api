@@ -37,7 +37,7 @@ public class PlanoTreinoService {
     @Autowired
     private ExercicioRepository exercicioRepository;
 
-    PlanoTreinoResponse toPlanoResponse(PlanoTreino planoTreino){
+    public PlanoTreinoResponse toPlanoResponse(PlanoTreino planoTreino){
 
         List<DiaDaSemana> dias = planoTreino.getDias()
             .stream()
@@ -55,7 +55,7 @@ public class PlanoTreinoService {
         );
     }
 
-    PlanoTreino toPlanoEntity(PlanoTreinoRequest request, Usuario usuario){
+    public PlanoTreino toPlanoEntity(PlanoTreinoRequest request, Usuario usuario){
         return new PlanoTreino(
             usuario,
             request.objetivoFitness(),

@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 
 @RestController
-@RequestMapping("/planos")
+@RequestMapping("/planosTreino")
 public class PlanoTreinoController {
     
     @Autowired

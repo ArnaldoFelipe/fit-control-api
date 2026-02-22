@@ -1,8 +1,19 @@
 package Evolua.application.entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import Evolua.application.entities.enums.DiaDaSemana;
 import Evolua.application.entities.enums.ObjetivoFitness;
+import Evolua.application.exception.diaDieta.DiaDietaNaoEncontradoException;
+import Evolua.application.exception.planoTreino.DiasDuplicadosException;
+import Evolua.application.exception.planoTreino.PlanoInvalidoException;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,6 +22,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
@@ -20,6 +32,7 @@ public class PlanoDieta {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "plano_dieta_id")
     private Long id;
 
     @ManyToOne
@@ -27,13 +40,23 @@ public class PlanoDieta {
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ObjetivoFitness objetivoFitness;
 
-    private Integer caloriasDiarias;
+    @Column(nullable = false)
+    private BigDecimal caloriasDiarias;
 
+    @Column(nullable = false)
     private Boolean ativo;
 
     private LocalDateTime dataCriacao;
+
+    @OneToMany(
+        mappedBy = "planoDieta",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<DiaDieta> dias = new ArrayList<>();
 
     @PrePersist
     public void PrePersist(){
@@ -42,60 +65,57 @@ public class PlanoDieta {
 
     public PlanoDieta(){}
 
-    public PlanoDieta(Usuario usuario, ObjetivoFitness objetivoFitness, Integer caloriasDiarias,
-            Boolean ativo) {
+    public PlanoDieta(Usuario usuario, ObjetivoFitness objetivoFitness, BigDecimal caloriasDiarias,
+             List<DiaDaSemana> dias) {
+
+        validarDias(dias);
+
+        if(usuario == null){
+            throw new PlanoInvalidoException("usuario é obrigatorio");
+        }
+        if(objetivoFitness == null){
+            throw new PlanoInvalidoException("objetivo é obrigatorio");
+        }
+        if(caloriasDiarias == null){
+            throw new PlanoInvalidoException("calorias é obrigatorio");
+        }
+        
         this.usuario = usuario;
         this.objetivoFitness = objetivoFitness;
         this.caloriasDiarias = caloriasDiarias;
-        this.ativo = ativo;
+        this.ativo = true;
+
+        for(DiaDaSemana dia : dias){
+            adicionarDia(dia);
+        }
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Usuario getUsuario() {
         return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
 
     public ObjetivoFitness getObjetivoFitness() {
         return objetivoFitness;
     }
 
-    public void setObjetivoFitness(ObjetivoFitness objetivoFitness) {
-        this.objetivoFitness = objetivoFitness;
-    }
-
-    public Integer getCaloriasDiarias() {
+    public BigDecimal getCaloriasDiarias() {
         return caloriasDiarias;
-    }
-
-    public void setCaloriasDiarias(Integer caloriasDiarias) {
-        this.caloriasDiarias = caloriasDiarias;
     }
 
     public Boolean getAtivo() {
         return ativo;
     }
 
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
-    }
-
     public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
+    public List<DiaDieta> getDias() {
+        return List.copyOf(dias);
     }
 
     @Override
@@ -121,5 +141,65 @@ public class PlanoDieta {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    private void validarDias(List<DiaDaSemana> diasSemana){
+
+        if(diasSemana == null || diasSemana.isEmpty()){
+            throw new PlanoInvalidoException("Plano deve possuir pelo menos um dia");
+        }
+
+        Set<DiaDaSemana> diasUnicos = new HashSet<>(diasSemana);
+
+        if(diasUnicos.size() != diasSemana.size()){
+            throw new DiasDuplicadosException("Dias de dieta não podem ser repetidos");
+        }
+    }
+
+    public void adicionarDia(DiaDaSemana diaSemana) {
+
+        boolean jaExiste = dias.stream()
+            .anyMatch(d -> d.getDia().equals(diaSemana));
+
+        if(jaExiste){
+            throw new DiasDuplicadosException("dia ja existe no plano");
+        }
+
+        DiaDieta dia = new DiaDieta(this, diaSemana);
+        dias.add(dia);
+    }
+
+    public DiaDieta buscarDia(DiaDaSemana diaSemana){
+        return dias.stream()
+            .filter(d -> d.getDia().equals(diaSemana))
+            .findFirst()
+            .orElseThrow(() -> new DiaDietaNaoEncontradoException("Dia não encontrado no plano"));
+    }
+
+    public PlanoDieta atualizarObjetivo(ObjetivoFitness objetivo){
+        if(objetivo == null){
+            throw new PlanoInvalidoException("Objetivo não pode ser nulo");
+        }
+
+        this.objetivoFitness = objetivo;
+
+        return this;
+    }
+
+    public PlanoDieta atualizarCalorias(BigDecimal calorias){
+        if(calorias == null){
+            throw new PlanoInvalidoException("Objetivo não pode ser nulo");
+        }
+
+        this.caloriasDiarias = calorias;
+        return this;
+    }
+
+    public void ativar(){
+        this.ativo = true;
+    }
+
+    public void desativar(){
+        this.ativo = false;
     }
 }

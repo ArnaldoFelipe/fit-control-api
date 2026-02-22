@@ -8,12 +8,16 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import Evolua.application.exception.diaDieta.DiaDietaNaoEncontradoException;
 import Evolua.application.exception.dto.ErroResponse;
 import Evolua.application.exception.exercicio.ExercicioNaoEncontradoException;
 import Evolua.application.exception.planoTreino.DiaTreinoNaoEncontradoException;
 import Evolua.application.exception.planoTreino.DiasDuplicadosException;
 import Evolua.application.exception.planoTreino.PlanoInvalidoException;
 import Evolua.application.exception.planoTreino.PlanoTreinoNaoEncontradoException;
+import Evolua.application.exception.refeicao.RefeicaoInvalidaException;
+import Evolua.application.exception.refeicao.RefeicaoNaoEncontradoException;
+import Evolua.application.exception.refeicao.TipoRefeicaoDuplicadoException;
 import Evolua.application.exception.treino.TreinoDuplicadoException;
 import Evolua.application.exception.treino.TreinoInvalidoException;
 import Evolua.application.exception.treino.TreinoNaoEncontradoException;
@@ -146,6 +150,50 @@ public class GlobalExceptionHandler {
                 .body(new ErroResponse(
                     ex.getMessage(),
                     "DIA_NAO_ENCONTRADO",
+                    LocalDateTime.now()
+                ));
+    }
+
+    @ExceptionHandler(DiaDietaNaoEncontradoException.class)
+    public ResponseEntity<ErroResponse> handleDiaDietaNaoEncontrado(DiaDietaNaoEncontradoException ex){
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErroResponse(
+                    ex.getMessage(),
+                    "DIA_NAO_ENCONTRADO",
+                    LocalDateTime.now()
+                ));
+    }
+
+    @ExceptionHandler(RefeicaoInvalidaException.class)
+    public ResponseEntity<ErroResponse> handleRefeicaoInvalida(RefeicaoInvalidaException ex){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErroResponse(
+                    ex.getMessage(),
+                    "REFEICAO_INVALIDA",
+                    LocalDateTime.now()
+                ));
+    }
+
+    @ExceptionHandler(RefeicaoNaoEncontradoException.class)
+    public ResponseEntity<ErroResponse> handleRefeicaoNaoEncontrada(RefeicaoNaoEncontradoException ex){
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErroResponse(
+                    ex.getMessage(),
+                    "REFEICAO_NAO_ENCONTRADA",
+                    LocalDateTime.now()
+                ));
+    }
+
+    @ExceptionHandler(TipoRefeicaoDuplicadoException.class)
+    public ResponseEntity<ErroResponse> handleTipoRefeicaoDuplicada(TipoRefeicaoDuplicadoException ex){
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ErroResponse(
+                    ex.getMessage(),
+                    "TIPO_REFEICAO_DUPLICADA",
                     LocalDateTime.now()
                 ));
     }
