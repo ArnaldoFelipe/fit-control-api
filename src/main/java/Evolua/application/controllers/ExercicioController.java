@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import Evolua.application.entities.dto.exercicio.ExercicioResponse;
+import Evolua.application.dto.exercicio.ExercicioResponse;
 import Evolua.application.services.ExercicioService;
 
 @RestController

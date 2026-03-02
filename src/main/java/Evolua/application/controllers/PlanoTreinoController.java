@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import Evolua.application.entities.dto.planoTreino.AtualizarPlanoRequest;
-import Evolua.application.entities.dto.planoTreino.PlanoTreinoRequest;
-import Evolua.application.entities.dto.planoTreino.PlanoTreinoResponse;
-import Evolua.application.entities.dto.treino.AtualizarTreinoRequest;
-import Evolua.application.entities.dto.treino.TreinoRequest;
-import Evolua.application.entities.dto.treino.TreinoResponse;
+import Evolua.application.dto.planoTreino.AtualizarPlanoRequest;
+import Evolua.application.dto.planoTreino.PlanoTreinoRequest;
+import Evolua.application.dto.planoTreino.PlanoTreinoResponse;
+import Evolua.application.dto.treino.AtualizarTreinoRequest;
+import Evolua.application.dto.treino.TreinoRequest;
+import Evolua.application.dto.treino.TreinoResponse;
 import Evolua.application.entities.enums.DiaDaSemana;
 import Evolua.application.services.PlanoTreinoService;
 import jakarta.validation.Valid;

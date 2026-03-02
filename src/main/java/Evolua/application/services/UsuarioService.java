@@ -3,9 +3,9 @@ package Evolua.application.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import Evolua.application.dto.usuario.UsuarioRequest;
+import Evolua.application.dto.usuario.UsuarioResponse;
 import Evolua.application.entities.Usuario;
-import Evolua.application.entities.dto.usuario.UsuarioRequest;
-import Evolua.application.entities.dto.usuario.UsuarioResponse;
 import Evolua.application.exception.usuario.EmailJaCadastradoException;
 import Evolua.application.exception.usuario.UsuarioNaoEncontradoException;
 import Evolua.application.repository.UsuarioRepository;
@@ -61,5 +61,4 @@ public class UsuarioService {
 
         return toResponse(usuario);
     }
-
 }

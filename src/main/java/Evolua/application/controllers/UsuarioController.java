@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import Evolua.application.entities.dto.usuario.UsuarioRequest;
-import Evolua.application.entities.dto.usuario.UsuarioResponse;
+import Evolua.application.dto.usuario.UsuarioRequest;
+import Evolua.application.dto.usuario.UsuarioResponse;
 import Evolua.application.services.UsuarioService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;

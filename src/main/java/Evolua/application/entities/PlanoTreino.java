@@ -40,9 +40,11 @@ public class PlanoTreino {
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ObjetivoFitness objetivoFitness;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private VolumeTreino volumeTreino;
 
     private boolean ativo;

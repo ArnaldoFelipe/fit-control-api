@@ -1,4 +1,4 @@
-package Evolua.application.entities.dto.treino;
+package Evolua.application.dto.treino;
 
 public record TreinoResponse(
 

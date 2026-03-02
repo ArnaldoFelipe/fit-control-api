@@ -1,4 +1,4 @@
-package Evolua.application.entities.dto.exercicio;
+package Evolua.application.dto.exercicio;
 
 import Evolua.application.entities.enums.GrupoMuscular;
 

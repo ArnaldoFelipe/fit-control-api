@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import Evolua.application.entities.dto.planoDieta.AtualizarPlanoDietaRequest;
-import Evolua.application.entities.dto.planoDieta.PlanoDietaRequest;
-import Evolua.application.entities.dto.planoDieta.PlanoDietaResponse;
-import Evolua.application.entities.dto.refeicao.AtualizarRefeicaoRequest;
-import Evolua.application.entities.dto.refeicao.RefeicaoRequest;
-import Evolua.application.entities.dto.refeicao.RefeicaoResponse;
+import Evolua.application.dto.planoDieta.AtualizarPlanoDietaRequest;
+import Evolua.application.dto.planoDieta.PlanoDietaRequest;
+import Evolua.application.dto.planoDieta.PlanoDietaResponse;
+import Evolua.application.dto.refeicao.AtualizarRefeicaoRequest;
+import Evolua.application.dto.refeicao.RefeicaoRequest;
+import Evolua.application.dto.refeicao.RefeicaoResponse;
 import Evolua.application.entities.enums.DiaDaSemana;
 import Evolua.application.services.PlanoDietaService;
 import jakarta.validation.Valid;

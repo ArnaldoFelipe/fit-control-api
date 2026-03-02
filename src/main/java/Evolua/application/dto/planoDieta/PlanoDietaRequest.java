@@ -1,24 +1,24 @@
-package Evolua.application.entities.dto.planoTreino;
+package Evolua.application.dto.planoDieta;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-import Evolua.application.entities.enums.ObjetivoFitness;
-import Evolua.application.entities.enums.VolumeTreino;
 import Evolua.application.entities.enums.DiaDaSemana;
+import Evolua.application.entities.enums.ObjetivoFitness;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
-public record PlanoTreinoRequest(
+public record PlanoDietaRequest (
     @NotNull(message = "Usuario é obrigatorio")
     Long usuarioId, 
 
     @NotNull(message = "Objetivo é obrigatorio")
     ObjetivoFitness objetivoFitness,
 
-    @NotNull(message = "Volume de treino é obrigatorio")
-    VolumeTreino volumeTreino,
+    @PositiveOrZero
+    BigDecimal caloriasDiarias,
 
-    @NotEmpty(message = "Ionforme pelo menos um dia de Treino")
+    @NotEmpty(message = "Ionforme pelo menos um dia para o plano")
     List<DiaDaSemana> dias
-){}    
-
+){}

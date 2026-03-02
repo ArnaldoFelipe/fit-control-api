@@ -1,4 +1,4 @@
-package Evolua.application.entities.dto.usuario;
+package Evolua.application.dto.usuario;
 
 
 public record UsuarioResponse(

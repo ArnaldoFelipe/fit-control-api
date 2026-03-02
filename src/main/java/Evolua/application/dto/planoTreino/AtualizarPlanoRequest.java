@@ -1,4 +1,4 @@
-package Evolua.application.entities.dto.planoTreino;
+package Evolua.application.dto.planoTreino;
 
 import java.util.List;
 

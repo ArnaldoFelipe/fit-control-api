@@ -1,4 +1,4 @@
-package Evolua.application.entities.dto.refeicao;
+package Evolua.application.dto.refeicao;
 
 import java.math.BigDecimal;
 

@@ -2,7 +2,8 @@ CREATE TABLE usuario (
     id BIGSERIAL PRIMARY KEY,
     nome VARCHAR(150) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
-    senha VARCHAR(255) NOT NULL
+    senha VARCHAR(255) NOT NULL,
+    data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE plano_treino (
@@ -52,4 +53,40 @@ CREATE TABLE treino (
         FOREIGN KEY (exercicio_id)
         REFERENCES exercicio (exercicio_id)
         ON DELETE RESTRICT
+);
+
+CREATE TABLE plano_dieta (
+    plano_dieta_id BIGSERIAL PRIMARY KEY,
+    usuario_id BIGINT NOT NULL,
+    objetivo_fitness VARCHAR(100) NOT NULL,
+    ativo BOOLEAN NOT NULL,
+    data_criacao TIMESTAMP NOT NULL,
+
+    CONSTRAINT fk_plano_dieta_usuario
+        FOREIGN KEY (usuario_id)
+        REFERENCES usuario(id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE dia_dieta (
+    dia_dieta_id BIGSERIAL PRIMARY KEY,
+    plano_dieta_id BIGINT NOT NULL,
+    dia VARCHAR(20) NOT NULL,
+
+    CONSTRAINT fk_dia_dieta_plano
+        FOREIGN KEY (plano_dieta_id)
+        REFERENCES plano_dieta(plano_dieta_id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE refeicao (
+    refeicao_id BIGSERIAL PRIMARY KEY,
+    dia_dieta_id BIGINT NOT NULL,
+    descricao VARCHAR(255) NOT NULL,
+    calorias INTEGER NOT NULL,
+
+    CONSTRAINT fk_refeicao_dia
+        FOREIGN KEY (dia_dieta_id)
+        REFERENCES dia_dieta(dia_dieta_id)
+        ON DELETE CASCADE
 );

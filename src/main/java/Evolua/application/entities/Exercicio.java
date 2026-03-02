@@ -19,10 +19,11 @@ public class Exercicio {
     @Column(name = "exercicio_id")
     private Long id;
 
+    @Column(nullable = false)
     private String nome;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "grupo_muscular")
+    @Column(name = "grupo_muscular", nullable = false)
     private GrupoMuscular grupoMuscular;
 
     public Exercicio(){}

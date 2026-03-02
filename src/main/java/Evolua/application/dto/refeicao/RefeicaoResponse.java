@@ -1,13 +1,14 @@
-package Evolua.application.entities.dto.refeicao;
+package Evolua.application.dto.refeicao;
 
 import java.math.BigDecimal;
 
 import Evolua.application.entities.enums.TipoRefeicao;
 
-public record AtualizarRefeicaoRequest(
+public record RefeicaoResponse(
 
     Long refeicaoId,
+    Long diaDietaId,
     TipoRefeicao tpRefeicao,
-    String nome, 
+    String nome,
     BigDecimal calorias
 ) {}

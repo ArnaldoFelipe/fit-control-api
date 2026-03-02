@@ -1,6 +1,12 @@
 package Evolua.application.entities;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,22 +19,23 @@ import jakarta.persistence.Table;
 
 @Entity 
 @Table(name = "usuario")
-public class Usuario {
+public class Usuario implements UserDetails{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "usuario_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false)
-    private String senha;
-
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String senha;
+
+    @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
 
     @PrePersist
@@ -38,10 +45,10 @@ public class Usuario {
 
     public Usuario(){}
 
-    public Usuario(String nome, String senha, String email) {
+    public Usuario(String nome, String email, String senha) {
         this.nome = nome;
-        this.senha = senha;
         this.email = email;
+        this.senha = senha;
     }
 
     public Long getId() {
@@ -107,5 +114,24 @@ public class Usuario {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public @Nullable String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    public void setPassword(String password) {
+        this.senha = password;
     }
 }

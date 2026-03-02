@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import Evolua.application.dto.exercicio.ExercicioResponse;
 import Evolua.application.entities.Exercicio;
-import Evolua.application.entities.dto.exercicio.ExercicioResponse;
 import Evolua.application.exception.exercicio.ExercicioNaoEncontradoException;
 import Evolua.application.repository.ExercicioRepository;
 

@@ -2,6 +2,7 @@ package Evolua.application.entities;
 
 
 import Evolua.application.exception.treino.TreinoInvalidoException;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,7 +27,9 @@ public class Treino {
     @JoinColumn(name = "exercicio_id", nullable = false)
     private Exercicio exercicio;
 
+    @Column(nullable = false)
     private Integer series;
+    @Column(nullable = false)
     private Integer repeticoes;
     
     public Treino(){}

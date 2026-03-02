@@ -1,4 +1,4 @@
-package Evolua.application.entities.dto.planoDieta;
+package Evolua.application.dto.planoDieta;
 
 import java.math.BigDecimal;
 

@@ -1,19 +1,19 @@
-package Evolua.application.entities.dto.planoTreino;
+package Evolua.application.dto.planoDieta;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import Evolua.application.entities.enums.DiaDaSemana;
 import Evolua.application.entities.enums.ObjetivoFitness;
-import Evolua.application.entities.enums.VolumeTreino;
 
+public record PlanoDietaResponse (
 
-public record PlanoTreinoResponse(
-    Long id,
+    Long planoId,
     Long usuarioId,
     ObjetivoFitness objetivoFitness,
-    VolumeTreino volumeTreino,
-    boolean ativo,
+    BigDecimal caloriasDiarias,
+    Boolean ativo,
     LocalDateTime dataCriacao,
     List<DiaDaSemana> dias
-) {}
+){}
