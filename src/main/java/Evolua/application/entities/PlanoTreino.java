@@ -67,28 +67,16 @@ public class PlanoTreino {
 
     public PlanoTreino(){}
 
-    public PlanoTreino(Usuario usuario, ObjetivoFitness objetivoFitness, VolumeTreino volumeTreino, List<DiaDaSemana> diasSemana) {
-
-        validarDias(diasSemana);
-
-        if(usuario == null){
-            throw new PlanoInvalidoException("usuario é obrigatorio");
-        }
-        if(objetivoFitness == null){
-            throw new PlanoInvalidoException("objetivo é obrigatorio");
-        }
-        if(volumeTreino == null){
-            throw new PlanoInvalidoException("volume é obrigatorio");
-        }
+    public PlanoTreino(Usuario usuario, ObjetivoFitness objetivoFitness, VolumeTreino volumeTreino){
+        if(usuario == null) throw new PlanoInvalidoException("usuario é obrigatorio");
+        if(objetivoFitness == null) throw new PlanoInvalidoException("objetivo é obrigatorio");
+        if(volumeTreino == null) throw new PlanoInvalidoException("volume é obrigatorio");
 
         this.usuario = usuario;
         this.objetivoFitness = objetivoFitness;
         this.volumeTreino = volumeTreino;
         this.ativo = true;
 
-        for (DiaDaSemana diaSemana : diasSemana){
-            adicionarDia(diaSemana);
-        }
     }
 
     public Long getId() {
@@ -148,7 +136,7 @@ public class PlanoTreino {
         return true;
     }
 
-    public void adicionarDia(DiaDaSemana diaSemana) {
+    public DiaTreino adicionarDia(DiaDaSemana diaSemana) {
 
         boolean jaExiste = dias.stream()
             .anyMatch(d -> d.getDiaDaSemana().equals(diaSemana));
@@ -159,6 +147,7 @@ public class PlanoTreino {
 
         DiaTreino dia = new DiaTreino(this, diaSemana);
         dias.add(dia);
+        return dia;
     }
 
     private void validarDias(List<DiaDaSemana> diasSemana){

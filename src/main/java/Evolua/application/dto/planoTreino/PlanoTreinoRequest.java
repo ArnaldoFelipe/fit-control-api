@@ -2,6 +2,7 @@ package Evolua.application.dto.planoTreino;
 
 import java.util.List;
 
+import Evolua.application.dto.diaTreino.DiaTreinoRequest;
 import Evolua.application.entities.enums.ObjetivoFitness;
 import Evolua.application.entities.enums.VolumeTreino;
 import Evolua.application.entities.enums.DiaDaSemana;
@@ -19,6 +20,6 @@ public record PlanoTreinoRequest(
     VolumeTreino volumeTreino,
 
     @NotEmpty(message = "Ionforme pelo menos um dia de Treino")
-    List<DiaDaSemana> dias
+    List<DiaTreinoRequest> dias
 ){}    
 

@@ -2,6 +2,7 @@ package Evolua.application.services;
 
 import java.util.List;
 
+import Evolua.application.dto.diaTreino.DiaTreinoRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,8 +76,7 @@ public class PlanoTreinoService {
         return new PlanoTreino(
             usuario,
             request.objetivoFitness(),
-            request.volumeTreino(),
-            request.dias()
+            request.volumeTreino()
         );
     }
 
@@ -102,11 +102,22 @@ public class PlanoTreinoService {
                 planoTreinoRepository.save(planoAtivo);
             });
 
-        PlanoTreino planoTreino = toPlanoEntity(request, usuario);
-        PlanoTreino planoSalvo = planoTreinoRepository.save(planoTreino);
+        PlanoTreino plano = toPlanoEntity(request, usuario);
 
-        criaTreinos(planoSalvo);
+        for (DiaTreinoRequest diaRequest : request.dias()){
 
+            DiaTreino dia = plano.adicionarDia(diaRequest.dia());
+
+            List<Exercicio> exercicios = exercicioRepository.findByGrupoMuscularIn(diaRequest.gruposMusculares());
+
+            int quantidadeExercicios = Math.min(5, exercicios.size());
+
+            for(int i= 0 ; i<quantidadeExercicios; i++){
+                dia.adicionarTreino(exercicios.get(i), 4, 10);
+            }
+        }
+
+        PlanoTreino planoSalvo = planoTreinoRepository.save(plano);
         return toPlanoResponse(planoSalvo);
     }
 
