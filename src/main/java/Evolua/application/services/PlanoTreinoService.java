@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import Evolua.application.dto.diaTreino.DiaTreinoResponse;
 import Evolua.application.dto.planoTreino.AtualizarPlanoRequest;
 import Evolua.application.dto.planoTreino.PlanoTreinoRequest;
 import Evolua.application.dto.planoTreino.PlanoTreinoResponse;
@@ -22,6 +23,7 @@ import Evolua.application.exception.planoTreino.PlanoTreinoNaoEncontradoExceptio
 import Evolua.application.exception.usuario.UsuarioNaoEncontradoException;
 import Evolua.application.repository.ExercicioRepository;
 import Evolua.application.repository.PlanoTreinoRepository;
+import Evolua.application.repository.TreinoRepository;
 import Evolua.application.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 
@@ -37,12 +39,26 @@ public class PlanoTreinoService {
     @Autowired
     private ExercicioRepository exercicioRepository;
 
+    @Autowired
+    private TreinoRepository teinoRepository;
+
     public PlanoTreinoResponse toPlanoResponse(PlanoTreino planoTreino){
 
-        List<DiaDaSemana> dias = planoTreino.getDias()
-            .stream()
-            .map(DiaTreino::getDiaDaSemana)
-            .toList();
+        List<DiaTreinoResponse> dias = planoTreino.getDias()
+        .stream()
+        .map(diaTreino -> {
+
+            List<TreinoResponse> treinos = diaTreino.getTreinos()
+                .stream()
+                .map(this::toTreinoResponse)
+                .toList();
+
+            return new DiaTreinoResponse(
+                diaTreino.getDiaDaSemana(),
+                treinos
+            );
+        })
+        .toList();
 
         return new PlanoTreinoResponse(
             planoTreino.getId(),
@@ -88,6 +104,8 @@ public class PlanoTreinoService {
 
         PlanoTreino planoTreino = toPlanoEntity(request, usuario);
         PlanoTreino planoSalvo = planoTreinoRepository.save(planoTreino);
+
+        criaTreinos(planoSalvo);
 
         return toPlanoResponse(planoSalvo);
     }
@@ -178,5 +196,25 @@ public class PlanoTreinoService {
 
         Treino treino = dia.buscarTreinoPorId(treinoId);
         return toTreinoResponse(treino);
+    }
+
+    public void criaTreinos(PlanoTreino planoTreino){
+
+        List<Exercicio> exercicios = exercicioRepository.findAll();
+
+        for(DiaTreino diaTreino : planoTreino.getDias()){
+
+            for(Exercicio exercicio : exercicios){
+                Treino treino = new Treino(
+                    diaTreino,
+                    exercicio,
+                    4,
+                    10
+                );
+
+                diaTreino.adicionarTreino(exercicio, 4, 10);
+                teinoRepository.save(treino);
+            }
+        }
     }
 }

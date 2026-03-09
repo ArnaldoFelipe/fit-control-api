@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import Evolua.application.exception.arnold.ArnoldAiException;
 import Evolua.application.exception.diaDieta.DiaDietaNaoEncontradoException;
 import Evolua.application.exception.dto.ErroResponse;
 import Evolua.application.exception.exercicio.ExercicioNaoEncontradoException;
@@ -196,5 +197,16 @@ public class GlobalExceptionHandler {
                     "TIPO_REFEICAO_DUPLICADA",
                     LocalDateTime.now()
                 ));
+    }
+
+    @ExceptionHandler(ArnoldAiException.class)
+    public ResponseEntity<ErroResponse> handleFalhaIa(ArnoldAiException ex){
+        return ResponseEntity
+            .status(HttpStatus.SERVICE_UNAVAILABLE)
+            .body(new ErroResponse(
+                ex.getMessage(),
+                "ERRO_AO_SE_COMUNICAR_COM_SERVICO_DE_IA",
+                LocalDateTime.now()
+            ));
     }
 }

@@ -49,6 +49,7 @@ public class PlanoTreino {
 
     private boolean ativo;
 
+    @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
 
     @OneToMany(

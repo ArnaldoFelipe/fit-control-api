@@ -3,7 +3,7 @@ package Evolua.application.dto.planoTreino;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import Evolua.application.entities.enums.DiaDaSemana;
+import Evolua.application.dto.diaTreino.DiaTreinoResponse;
 import Evolua.application.entities.enums.ObjetivoFitness;
 import Evolua.application.entities.enums.VolumeTreino;
 
@@ -15,5 +15,5 @@ public record PlanoTreinoResponse(
     VolumeTreino volumeTreino,
     boolean ativo,
     LocalDateTime dataCriacao,
-    List<DiaDaSemana> dias
+    List<DiaTreinoResponse> dias
 ) {}

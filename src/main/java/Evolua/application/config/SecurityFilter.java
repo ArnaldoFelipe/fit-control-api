@@ -30,7 +30,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             if(optUser.isPresent()){
 
                 JWTUserData userData = optUser.get();
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userData, null);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userData, null, java.util.List.of());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             }
