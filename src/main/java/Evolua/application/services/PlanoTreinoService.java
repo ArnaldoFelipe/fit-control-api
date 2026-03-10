@@ -1,5 +1,6 @@
 package Evolua.application.services;
 
+import java.util.Collections;
 import java.util.List;
 
 import Evolua.application.dto.diaTreino.DiaTreinoRequest;
@@ -19,6 +20,7 @@ import Evolua.application.entities.PlanoTreino;
 import Evolua.application.entities.Treino;
 import Evolua.application.entities.Usuario;
 import Evolua.application.entities.enums.DiaDaSemana;
+import Evolua.application.entities.enums.GrupoMuscular;
 import Evolua.application.exception.exercicio.ExercicioNaoEncontradoException;
 import Evolua.application.exception.planoTreino.PlanoTreinoNaoEncontradoException;
 import Evolua.application.exception.usuario.UsuarioNaoEncontradoException;
@@ -54,8 +56,17 @@ public class PlanoTreinoService {
                 .map(this::toTreinoResponse)
                 .toList();
 
+            GrupoMuscular grupoMuscular = null;
+            if(!diaTreino.getTreinos().isEmpty()){
+                grupoMuscular = diaTreino.getTreinos()
+                    .get(0)
+                    .getExercicio()
+                    .getGrupoMuscular();
+            }
+
             return new DiaTreinoResponse(
                 diaTreino.getDiaDaSemana(),
+                grupoMuscular,
                 treinos
             );
         })
@@ -108,12 +119,52 @@ public class PlanoTreinoService {
 
             DiaTreino dia = plano.adicionarDia(diaRequest.dia());
 
+            if(diaRequest.exercicios() != null && !diaRequest.exercicios().isEmpty()){
+                for(TreinoRequest treinoRequest : diaRequest.exercicios()){
+                    Exercicio exercicio = exercicioRepository.findById(treinoRequest.exercicioId())
+                            .orElseThrow(() ->  new ExercicioNaoEncontradoException("Exercicio não encontrado"));
+                    
+                    dia.adicionarTreino(exercicio, treinoRequest.series(), treinoRequest.repeticoes());
+                }
+            }
+        }
+
+        PlanoTreino planoSalvo = planoTreinoRepository.save(plano);
+        return toPlanoResponse(planoSalvo);
+    }
+
+    @Transactional
+    public PlanoTreinoResponse criarPlanoTreinoIA(PlanoTreinoRequest request){
+        Usuario usuario = usuarioRepository.findById(request.usuarioId())
+            .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário com id: " + request.usuarioId() + " não encontrado"));
+        
+        planoTreinoRepository.findByUsuarioAndAtivoTrue(usuario)
+            .ifPresent(planoAtivo -> {
+                planoAtivo.desativar();
+                planoTreinoRepository.save(planoAtivo);
+            });
+
+        PlanoTreino plano = toPlanoEntity(request, usuario);
+
+        for (DiaTreinoRequest diaRequest : request.dias()){
+
+            DiaTreino dia = plano.adicionarDia(diaRequest.dia());
+
             List<Exercicio> exercicios = exercicioRepository.findByGrupoMuscularIn(diaRequest.gruposMusculares());
+            Collections.shuffle(exercicios);
+
+            System.out.println("Grupos encontrados: " + diaRequest.gruposMusculares());
+            System.out.println("Exercicios encontrados: " + exercicios.size());
 
             int quantidadeExercicios = Math.min(5, exercicios.size());
 
+            System.out.println("Quantidade exercicios selecionados: " + quantidadeExercicios);
             for(int i= 0 ; i<quantidadeExercicios; i++){
-                dia.adicionarTreino(exercicios.get(i), 4, 10);
+                Exercicio exercicio = exercicios.get(i);
+
+                System.out.println("Adicionando exercicio: " + exercicio.getNome());
+
+                dia.adicionarTreino(exercicio, 4, 10);
             }
         }
 
@@ -207,25 +258,5 @@ public class PlanoTreinoService {
 
         Treino treino = dia.buscarTreinoPorId(treinoId);
         return toTreinoResponse(treino);
-    }
-
-    public void criaTreinos(PlanoTreino planoTreino){
-
-        List<Exercicio> exercicios = exercicioRepository.findAll();
-
-        for(DiaTreino diaTreino : planoTreino.getDias()){
-
-            for(Exercicio exercicio : exercicios){
-                Treino treino = new Treino(
-                    diaTreino,
-                    exercicio,
-                    4,
-                    10
-                );
-
-                diaTreino.adicionarTreino(exercicio, 4, 10);
-                teinoRepository.save(treino);
-            }
-        }
     }
 }

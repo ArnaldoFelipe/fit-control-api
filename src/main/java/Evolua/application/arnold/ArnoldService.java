@@ -1,6 +1,5 @@
 package Evolua.application.arnold;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import Evolua.application.dto.planoDieta.PlanoDietaResponse;
 import Evolua.application.dto.planoTreino.PlanoTreinoRequest;
 import Evolua.application.dto.planoTreino.PlanoTreinoResponse;
 import Evolua.application.exception.arnold.ArnoldAiException;
-import Evolua.application.repository.ExercicioRepository;
 import Evolua.application.services.PlanoDietaService;
 import Evolua.application.services.PlanoTreinoService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,16 +25,11 @@ public class ArnoldService {
     private PlanoTreinoService treinoService;
     @Autowired
     private PlanoDietaService dietaService;
-    @Autowired
-    private ExercicioRepository exercicioRepository;
-    
+        
 
     public ArnoldResponse interagir(String mensagemDoUsuario, Long usuarioId){
 
-        List<String> listaNomes = exercicioRepository.findAllNomes();
-        String exerciciosDisponiveis = String.join(", ", listaNomes);
-
-        ArnoldDecisao decisao = arnoldAiService.processar(usuarioId, mensagemDoUsuario, exerciciosDisponiveis);
+        ArnoldDecisao decisao = arnoldAiService.processar(usuarioId, mensagemDoUsuario);
 
         log.info("Resposta IA: {}", decisao);
 
@@ -52,7 +45,7 @@ public class ArnoldService {
                     decisao.planoTreino().dias()
                 );
 
-                PlanoTreinoResponse planoCriado = treinoService.criarPlanoTreino(request);
+                PlanoTreinoResponse planoCriado = treinoService.criarPlanoTreinoIA(request);
 
                 return new ArnoldResponse(
                     decisao.tipoResposta(),

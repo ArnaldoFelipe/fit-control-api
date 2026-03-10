@@ -1,5 +1,6 @@
 package Evolua.application.dto.treino;
 
+
 public record TreinoResponse(
 
     Long id,

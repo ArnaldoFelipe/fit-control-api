@@ -5,7 +5,6 @@ import java.util.List;
 import Evolua.application.dto.diaTreino.DiaTreinoRequest;
 import Evolua.application.entities.enums.ObjetivoFitness;
 import Evolua.application.entities.enums.VolumeTreino;
-import Evolua.application.entities.enums.DiaDaSemana;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 

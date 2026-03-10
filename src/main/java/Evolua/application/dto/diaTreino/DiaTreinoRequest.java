@@ -1,5 +1,6 @@
 package Evolua.application.dto.diaTreino;
 
+import Evolua.application.dto.treino.TreinoRequest;
 import Evolua.application.entities.enums.DiaDaSemana;
 import Evolua.application.entities.enums.GrupoMuscular;
 import jakarta.validation.constraints.NotNull;
@@ -12,5 +13,13 @@ public record DiaTreinoRequest(
         DiaDaSemana dia,
 
         @NotNull(message = "Informe os grupos musculares")
-        List<GrupoMuscular> gruposMusculares
-) {}
+        List<String> gruposMuscular,
+
+        
+        List<TreinoRequest> exercicios
+) {
+
+        public List<GrupoMuscular> gruposMusculares() {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'gruposMusculares'");
+        }}
