@@ -9,9 +9,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 public record RefeicaoRequest(
 
-    @NotNull(message = "Dia da dieta é obrigatorio")
-    Long diaDietaId,
-
     @NotNull(message = "Tipo da refeição é obrigatorio")
     TipoRefeicao tpRefeicao,
 

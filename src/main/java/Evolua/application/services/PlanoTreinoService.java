@@ -150,10 +150,10 @@ public class PlanoTreinoService {
 
             DiaTreino dia = plano.adicionarDia(diaRequest.dia());
 
-            List<Exercicio> exercicios = exercicioRepository.findByGrupoMuscularIn(diaRequest.gruposMusculares());
+            List<Exercicio> exercicios = exercicioRepository.findByGrupoMuscularIn(diaRequest.gruposMuscular());
             Collections.shuffle(exercicios);
 
-            System.out.println("Grupos encontrados: " + diaRequest.gruposMusculares());
+            System.out.println("Grupos encontrados: " + diaRequest.gruposMuscular());
             System.out.println("Exercicios encontrados: " + exercicios.size());
 
             int quantidadeExercicios = Math.min(5, exercicios.size());

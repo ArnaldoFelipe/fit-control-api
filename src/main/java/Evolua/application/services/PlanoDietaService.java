@@ -1,5 +1,6 @@
 package Evolua.application.services;
 
+import Evolua.application.dto.diaDieta.DiaDietaRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,8 +48,7 @@ public class PlanoDietaService {
         return new PlanoDieta(
             usuario,
             request.objetivoFitness(),
-            request.caloriasDiarias(),
-            request.dias()
+            request.caloriasDiarias()
         );
     }
 
@@ -69,6 +69,25 @@ public class PlanoDietaService {
             .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário com id: " + request.usuarioId() + " não encontrado"));
 
         PlanoDieta plano = toPlanoDietaEntity(request, usuario);
+
+        for(DiaDietaRequest diaRequest : request.dias()){
+
+            plano.adicionarDia(diaRequest.dia());
+
+            DiaDieta diaCriado = plano.getDias()
+                    .stream()
+                    .filter(d -> d.getDia().equals(diaRequest.dia()))
+                    .findFirst()
+                    .orElseThrow();
+            for(RefeicaoRequest refeicaoRequest : diaRequest.refeicoes()){
+
+                diaCriado.adicionarRefeicao(
+                        refeicaoRequest.tpRefeicao(),
+                        refeicaoRequest.nome(),
+                        refeicaoRequest.calorias()
+                );
+            }
+        }
 
         planoDietaRepository.save(plano);
         return toPlanoDietaResponse(plano);

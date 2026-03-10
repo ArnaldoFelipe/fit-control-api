@@ -66,10 +66,7 @@ public class PlanoDieta {
 
     public PlanoDieta(){}
 
-    public PlanoDieta(Usuario usuario, ObjetivoFitness objetivoFitness, BigDecimal caloriasDiarias,
-             List<DiaDaSemana> dias) {
-
-        validarDias(dias);
+    public PlanoDieta(Usuario usuario, ObjetivoFitness objetivoFitness, BigDecimal caloriasDiarias) {
 
         if(usuario == null){
             throw new PlanoInvalidoException("usuario é obrigatorio");
@@ -85,10 +82,6 @@ public class PlanoDieta {
         this.objetivoFitness = objetivoFitness;
         this.caloriasDiarias = caloriasDiarias;
         this.ativo = true;
-
-        for(DiaDaSemana dia : dias){
-            adicionarDia(dia);
-        }
     }
 
     public Long getId() {

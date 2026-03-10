@@ -34,7 +34,7 @@ Cada dia deve conter:
 
 - gruposMuscular: lista com os grupos musculares a serem treinados neste dia.
 
-VALORES PERMITIDOS PARA gruposMuscular:
+VALORES PERMITIDOS PARA gruposMuscular apenas esses:
 
 PEITO
 COSTAS

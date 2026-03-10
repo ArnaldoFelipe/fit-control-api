@@ -13,13 +13,8 @@ public record DiaTreinoRequest(
         DiaDaSemana dia,
 
         @NotNull(message = "Informe os grupos musculares")
-        List<String> gruposMuscular,
+        List<GrupoMuscular> gruposMuscular,
 
         
         List<TreinoRequest> exercicios
-) {
-
-        public List<GrupoMuscular> gruposMusculares() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'gruposMusculares'");
-        }}
+) {}
