@@ -26,7 +26,6 @@ import Evolua.application.exception.planoTreino.PlanoTreinoNaoEncontradoExceptio
 import Evolua.application.exception.usuario.UsuarioNaoEncontradoException;
 import Evolua.application.repository.ExercicioRepository;
 import Evolua.application.repository.PlanoTreinoRepository;
-import Evolua.application.repository.TreinoRepository;
 import Evolua.application.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 
@@ -42,9 +41,7 @@ public class PlanoTreinoService {
     @Autowired
     private ExercicioRepository exercicioRepository;
 
-    @Autowired
-    private TreinoRepository teinoRepository;
-
+   
     public PlanoTreinoResponse toPlanoResponse(PlanoTreino planoTreino){
 
         List<DiaTreinoResponse> dias = planoTreino.getDias()

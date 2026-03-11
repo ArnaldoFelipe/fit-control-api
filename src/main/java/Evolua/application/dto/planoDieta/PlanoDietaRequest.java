@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import Evolua.application.dto.diaDieta.DiaDietaRequest;
-import Evolua.application.entities.enums.DiaDaSemana;
 import Evolua.application.entities.enums.ObjetivoFitness;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

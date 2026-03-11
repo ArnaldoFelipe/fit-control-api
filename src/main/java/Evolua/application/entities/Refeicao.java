@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import Evolua.application.entities.enums.TipoRefeicao;
 import Evolua.application.exception.refeicao.RefeicaoInvalidaException;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,6 +21,7 @@ public class Refeicao {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "refeicao_id")
     private Long id;
 
     @ManyToOne(optional = false)
@@ -27,6 +29,7 @@ public class Refeicao {
     private DiaDieta diaDieta;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "tp_refeicao", nullable = false)
     private TipoRefeicao tpRefeicao;
 
     private String nome;

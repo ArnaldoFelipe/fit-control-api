@@ -1,6 +1,8 @@
 package Evolua.application.services;
 
 import Evolua.application.dto.diaDieta.DiaDietaRequest;
+import Evolua.application.dto.diaDieta.DiaDietaResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +32,8 @@ public class PlanoDietaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public PlanoDietaResponse toPlanoDietaResponse(PlanoDieta planoDieta){
+    public PlanoDietaResponse toPlanoDietaResponse(PlanoDieta planoDieta) {
+
         return new PlanoDietaResponse(
             planoDieta.getId(),
             planoDieta.getUsuario().getId(),
@@ -39,9 +42,22 @@ public class PlanoDietaService {
             planoDieta.getAtivo(),
             planoDieta.getDataCriacao(),
             planoDieta.getDias()
-                    .stream()
-                    .map(DiaDieta::getDia)
-                    .toList());
+                .stream()
+                .map(dia -> new DiaDietaResponse(
+                    dia.getDia(),
+                    dia.getRefeicoes()
+                        .stream()
+                        .map(refeicao -> new RefeicaoResponse(
+                            refeicao.getId(),
+                            dia.getId(),
+                            refeicao.getTpRefeicao(),
+                            refeicao.getNome(),
+                            refeicao.getCalorias()
+                        ))
+                        .toList()
+                ))
+                .toList()
+        );
     }
 
     public PlanoDieta toPlanoDietaEntity(PlanoDietaRequest request, Usuario usuario){

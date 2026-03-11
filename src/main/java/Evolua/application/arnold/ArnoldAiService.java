@@ -64,6 +64,23 @@ Preencha o objeto 'planoDieta' com:
 - caloriasDiarias
 - dias da dieta com as refeições.
 
+Cada refeição deve conter:
+
+- tpRefeicao
+- nome
+- calorias
+
+VALORES PERMITIDOS PARA tpRefeicao:
+
+CAFE_DA_MANHA
+LANCHE_DA_MANHA
+ALMOCO
+LANCHE_DA_TARDE
+JANTAR
+CEIA
+
+Use exatamente esses nomes em MAIÚSCULO.
+
 REGRAS DE FORMATO:
 
 - A resposta deve ser SOMENTE JSON.
@@ -96,19 +113,55 @@ EXEMPLO DE TREINO:
 }
 
 EXEMPLO DE DIETA:
+O exemplo abaixo mostra apenas a estrutura do JSON.
+Os nomes das refeições e calorias devem ser gerados dinamicamente para cada dieta.
+Não copie os valores do exemplo.
+Cada dia deve conter múltiplas refeições.
+Use os tipos de refeição adequados como CAFE_DA_MANHA, LANCHE_DA_MANHA, ALMOCO, LANCHE_DA_TARDE, JANTAR e CEIA quando fizer sentido.
 
 {
   "tipoResposta": "CRIAR_DIETA",
-  "mensagem": "Aqui está sua dieta!",
+  "mensagem": "Mensagem motivadora",
   "planoTreino": null,
   "planoDieta": {
-    "usuarioId": 1,
+    "usuarioId": <ID_USUARIO>,
     "objetivoFitness": "HIPERTROFIA",
-    "caloriasDiarias": 2500,
+    "caloriasDiarias": <CALORIAS_TOTAIS>,
     "dias": [
       {
         "dia": "SEGUNDA",
-        "refeicoes": ["café", "almoço", "jantar"]
+        "refeicoes": [
+          {
+            "tpRefeicao": "CAFE_DA_MANHA",
+            "nome": "<REFEICAO>",
+            "calorias": <CALORIAS>
+          },
+          {
+            "tpRefeicao": "LANCHE_DA_MANHA",
+            "nome": "<REFEICAO>",
+            "calorias": <CALORIAS>
+          },
+          {
+            "tpRefeicao": "ALMOCO",
+            "nome": "<REFEICAO>",
+            "calorias": <CALORIAS>
+          },
+          {
+            "tpRefeicao": "LANCHE_DA_TARDE",
+            "nome": "<REFEICAO>",
+            "calorias": <CALORIAS>
+          },
+          {
+            "tpRefeicao": "JANTAR",
+            "nome": "<REFEICAO>",
+            "calorias": <CALORIAS>
+          },
+          {
+            "tpRefeicao": "CEIA",
+            "nome": "<REFEICAO>",
+            "calorias": <CALORIAS>
+          }
+        ]
       }
     ]
   }
@@ -122,6 +175,13 @@ EXEMPLO DE CHAT:
   "planoTreino": null,
   "planoDieta": null
 }
+
+GARANTA QUE O JSON SEJA VÁLIDO.
+
+- Não use comentários.
+- Não use vírgula no final.
+- Use sempre arrays [] para listas.
+- Use sempre números decimais para calorias.
 """)
         ArnoldDecisao processar(
             @MemoryId Long usuarioId,

@@ -59,6 +59,7 @@ CREATE TABLE plano_dieta (
     plano_dieta_id BIGSERIAL PRIMARY KEY,
     usuario_id BIGINT NOT NULL,
     objetivo_fitness VARCHAR(100) NOT NULL,
+    calorias_diarias NUMERIC(10,2) NOT NULL DEFAULT 0,
     ativo BOOLEAN NOT NULL,
     data_criacao TIMESTAMP NOT NULL,
 
@@ -82,8 +83,9 @@ CREATE TABLE dia_dieta (
 CREATE TABLE refeicao (
     refeicao_id BIGSERIAL PRIMARY KEY,
     dia_dieta_id BIGINT NOT NULL,
-    descricao VARCHAR(255) NOT NULL,
-    calorias INTEGER NOT NULL,
+    tp_refeicao VARCHAR(50) NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    calorias NUMERIC(10,2) NOT NULL,
 
     CONSTRAINT fk_refeicao_dia
         FOREIGN KEY (dia_dieta_id)

@@ -40,10 +40,10 @@ public class PlanoDieta {
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "objetivo_fitness", nullable = false)
     private ObjetivoFitness objetivoFitness;
 
-    @Column(nullable = false)
+    @Column(name = "calorias_diarias", nullable = false)
     private BigDecimal caloriasDiarias;
 
     @Column(nullable = false)

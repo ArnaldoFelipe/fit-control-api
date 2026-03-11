@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import Evolua.application.entities.enums.DiaDaSemana;
+import Evolua.application.dto.diaDieta.DiaDietaResponse;
 import Evolua.application.entities.enums.ObjetivoFitness;
 
 public record PlanoDietaResponse (
@@ -15,5 +15,5 @@ public record PlanoDietaResponse (
     BigDecimal caloriasDiarias,
     Boolean ativo,
     LocalDateTime dataCriacao,
-    List<DiaDaSemana> dias
+    List<DiaDietaResponse> dias
 ){}
