@@ -10,7 +10,10 @@ import Evolua.application.dto.planoDieta.PlanoDietaRequest;
 import Evolua.application.dto.planoDieta.PlanoDietaResponse;
 import Evolua.application.dto.planoTreino.PlanoTreinoRequest;
 import Evolua.application.dto.planoTreino.PlanoTreinoResponse;
+import Evolua.application.entities.Usuario;
 import Evolua.application.exception.arnold.ArnoldAiException;
+import Evolua.application.exception.usuario.UsuarioNaoEncontradoException;
+import Evolua.application.repository.UsuarioRepository;
 import Evolua.application.services.PlanoDietaService;
 import Evolua.application.services.PlanoTreinoService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +28,35 @@ public class ArnoldService {
     private PlanoTreinoService treinoService;
     @Autowired
     private PlanoDietaService dietaService;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
         
-
     public ArnoldResponse interagir(String mensagemDoUsuario, Long usuarioId){
 
-        ArnoldDecisao decisao = arnoldAiService.processar(usuarioId, mensagemDoUsuario);
+        
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException( "Usuário não encontrado"));
+
+        String mensagemComContexto = """
+            DADOS DO USUÁRIO:
+            - usuarioId: %d
+            - peso: %s
+            - altura: %s
+            - imc: %s
+            - classificacaoImc: %s
+
+            MENSAGEM DO USUÁRIO:
+            %s
+            """.formatted(
+                usuario.getId(),
+                usuario.getPeso() != null ? usuario.getPeso() : "desconhecido",
+                usuario.getAltura() != null ? usuario.getAltura() : "desconhecido",
+                usuario.getImc() != null ? usuario.getImc() : "desconhecido",
+                usuario.getClassificacaoImc() != null ? usuario.getClassificacaoImc() : "desconhecido",
+                mensagemDoUsuario
+        );
+
+        ArnoldDecisao decisao = arnoldAiService.processar(usuarioId, mensagemComContexto);
 
         log.info("Resposta IA: {}", decisao);
 

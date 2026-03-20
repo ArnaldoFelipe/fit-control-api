@@ -21,7 +21,11 @@ public class UsuarioService {
         return new UsuarioResponse(
             usuario.getId(),
             usuario.getNome(),
-            usuario.getEmail()
+            usuario.getEmail(),
+            usuario.getPeso(),
+            usuario.getAltura(),
+            usuario.getImc(),
+            usuario.getClassificacaoImc()
         );
     }
 
@@ -30,6 +34,8 @@ public class UsuarioService {
             usuario.setNome(request.nome());
             usuario.setSenha(request.senha());
             usuario.setEmail(request.email());
+            usuario.setPeso(request.peso());
+            usuario.setAltura(request.altura());
         
         return usuario;
     }

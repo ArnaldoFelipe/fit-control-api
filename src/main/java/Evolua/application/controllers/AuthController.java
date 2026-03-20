@@ -58,7 +58,11 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new UsuarioResponse(
             usuario.getId(),
             usuario.getNome(),
-            usuario.getEmail()
+            usuario.getEmail(),
+            usuario.getPeso(),
+            usuario.getAltura(),
+            usuario.getImc(),
+            usuario.getClassificacaoImc()
         ));
     }
 }

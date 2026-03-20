@@ -1,7 +1,10 @@
 package Evolua.application.dto.usuario;
 
+import java.math.BigDecimal;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 public record UsuarioRequest(
 
@@ -13,5 +16,11 @@ public record UsuarioRequest(
 
     @NotBlank(message = "email é obrigatorio")
     @Email(message = "email invalido")
-    String email
+    String email,
+
+    @Positive
+    BigDecimal peso,
+
+    @Positive
+    BigDecimal altura
 ){}
