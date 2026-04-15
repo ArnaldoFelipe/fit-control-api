@@ -1,7 +1,9 @@
 package Evolua.application.entities;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.Collection;
 import java.util.List;
 
@@ -50,6 +52,9 @@ public class Usuario implements UserDetails{
 
     @Column(name = "altura", precision = 4, scale = 2)
     private BigDecimal altura;
+
+    @Column(name = "data_nascimento", nullable = false)
+    private LocalDate dataNascimento;
 
     public Usuario(){}
 
@@ -121,6 +126,11 @@ public class Usuario implements UserDetails{
         this.altura = altura;
     }
 
+    public Integer getIdade(){
+        if(dataNascimento == null) return null;
+        return Period.between(dataNascimento, LocalDate.now()).getYears();
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -190,6 +200,14 @@ public class Usuario implements UserDetails{
 
     public void setPassword(String password) {
         this.senha = password;
+    }
+
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
 }

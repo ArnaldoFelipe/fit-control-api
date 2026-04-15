@@ -62,7 +62,9 @@ public class AuthController {
             usuario.getPeso(),
             usuario.getAltura(),
             usuario.getImc(),
-            usuario.getClassificacaoImc()
+            usuario.getClassificacaoImc(),
+            usuario.getDataNascimento(),
+            usuario.getIdade()
         ));
     }
 }

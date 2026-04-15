@@ -1,6 +1,7 @@
 package Evolua.application.dto.usuario;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -22,5 +23,7 @@ public record UsuarioRequest(
     BigDecimal peso,
 
     @Positive
-    BigDecimal altura
+    BigDecimal altura,
+
+    LocalDate dataNascimento
 ){}

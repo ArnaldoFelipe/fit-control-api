@@ -25,7 +25,9 @@ public class UsuarioService {
             usuario.getPeso(),
             usuario.getAltura(),
             usuario.getImc(),
-            usuario.getClassificacaoImc()
+            usuario.getClassificacaoImc(),
+            usuario.getDataNascimento(),
+            usuario.getIdade()
         );
     }
 
@@ -36,6 +38,7 @@ public class UsuarioService {
             usuario.setEmail(request.email());
             usuario.setPeso(request.peso());
             usuario.setAltura(request.altura());
+            usuario.setDataNascimento(request.dataNascimento());
         
         return usuario;
     }
