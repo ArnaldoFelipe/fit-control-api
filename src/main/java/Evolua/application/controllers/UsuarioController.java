@@ -3,6 +3,7 @@ package Evolua.application.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import Evolua.application.config.JWTUserData;
 import Evolua.application.dto.usuario.UsuarioRequest;
 import Evolua.application.dto.usuario.UsuarioResponse;
 import Evolua.application.services.UsuarioService;
@@ -40,6 +42,17 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity<UsuarioResponse> buscarUsuarioPorEmail(@RequestParam @Email String email){
         UsuarioResponse usuario = usuarioService.buscarUsuarioPorEmail(email);
+        return ResponseEntity.ok(usuario);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UsuarioResponse> buscarUsuarioLogado(Authentication authentication){
+        JWTUserData userData = (JWTUserData) authentication.getPrincipal();
+
+        Long id = userData.usuarioId();
+
+        System.out.println(userData);
+        UsuarioResponse usuario = usuarioService.buscarUsuarioPorId(id);
         return ResponseEntity.ok(usuario);
     }
 }

@@ -19,6 +19,7 @@ import Evolua.application.dto.usuario.UsuarioRequest;
 import Evolua.application.dto.usuario.UsuarioResponse;
 import Evolua.application.entities.Usuario;
 import Evolua.application.repository.UsuarioRepository;
+import Evolua.application.services.UsuarioService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
@@ -27,13 +28,14 @@ import jakarta.validation.Valid;
 public class AuthController {
     
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioService usuarioService;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
     private TokenConfig tokenConfig;
+    
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest login){
@@ -49,22 +51,7 @@ public class AuthController {
     @Transactional
     public ResponseEntity<UsuarioResponse> cadastrar(@Valid @RequestBody UsuarioRequest request){
 
-        Usuario usuario = new Usuario(
-            request.nome(),
-            request.email(),
-            passwordEncoder.encode(request.senha())
-        );
-        usuarioRepository.save(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new UsuarioResponse(
-            usuario.getId(),
-            usuario.getNome(),
-            usuario.getEmail(),
-            usuario.getPeso(),
-            usuario.getAltura(),
-            usuario.getImc(),
-            usuario.getClassificacaoImc(),
-            usuario.getDataNascimento(),
-            usuario.getIdade()
-        ));
+        UsuarioResponse usuario = usuarioService.criarUsuario(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
     }
 }

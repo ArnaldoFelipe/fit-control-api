@@ -1,6 +1,7 @@
 package Evolua.application.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import Evolua.application.dto.usuario.UsuarioRequest;
@@ -16,6 +17,8 @@ public class UsuarioService {
     
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private UsuarioResponse toResponse(Usuario usuario){
         return new UsuarioResponse(
@@ -34,7 +37,7 @@ public class UsuarioService {
     private Usuario toEntity(UsuarioRequest request){
          Usuario usuario = new Usuario();
             usuario.setNome(request.nome());
-            usuario.setSenha(request.senha());
+            usuario.setSenha(passwordEncoder.encode(request.senha()));
             usuario.setEmail(request.email());
             usuario.setPeso(request.peso());
             usuario.setAltura(request.altura());

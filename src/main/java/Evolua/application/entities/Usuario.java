@@ -58,10 +58,13 @@ public class Usuario implements UserDetails{
 
     public Usuario(){}
 
-    public Usuario(String nome, String email, String senha) {
+    public Usuario(String nome, String email, String senha, BigDecimal peso, BigDecimal altura, LocalDate dataNascimento) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+        this.peso = peso;
+        this.altura = altura;
+        this.dataNascimento = dataNascimento;
     }
 
     public Long getId() {
