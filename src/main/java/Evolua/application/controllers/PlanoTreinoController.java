@@ -3,6 +3,7 @@ package Evolua.application.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import Evolua.application.config.JWTUserData;
 import Evolua.application.dto.planoTreino.AtualizarPlanoRequest;
 import Evolua.application.dto.planoTreino.PlanoTreinoRequest;
 import Evolua.application.dto.planoTreino.PlanoTreinoResponse;
@@ -74,5 +76,11 @@ public class PlanoTreinoController {
     public ResponseEntity<TreinoResponse> buscarTreinoPorId(@PathVariable Long planoId, @PathVariable DiaDaSemana dia, @PathVariable Long treinoId){
         TreinoResponse treino = planoTreinoService.buscarTreinoId(planoId, dia, treinoId);
         return ResponseEntity.ok(treino);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<PlanoTreinoResponse> buscarTreinoUsuarioLogado(@AuthenticationPrincipal JWTUserData usuarioLogado){
+        PlanoTreinoResponse plano = planoTreinoService.buscarPlanoAtivoPorUsuario(usuarioLogado.usuarioId());
+        return ResponseEntity.ok(plano);
     }
 }
