@@ -3,6 +3,9 @@ package Evolua.application.services;
 import Evolua.application.dto.diaDieta.DiaDietaRequest;
 import Evolua.application.dto.diaDieta.DiaDietaResponse;
 
+import Evolua.application.dto.planoTreino.PlanoTreinoResponse;
+import Evolua.application.entities.*;
+import Evolua.application.exception.planoTreino.PlanoTreinoNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +15,6 @@ import Evolua.application.dto.planoDieta.PlanoDietaResponse;
 import Evolua.application.dto.refeicao.AtualizarRefeicaoRequest;
 import Evolua.application.dto.refeicao.RefeicaoRequest;
 import Evolua.application.dto.refeicao.RefeicaoResponse;
-import Evolua.application.entities.DiaDieta;
-import Evolua.application.entities.PlanoDieta;
-import Evolua.application.entities.Refeicao;
-import Evolua.application.entities.Usuario;
 import Evolua.application.entities.enums.DiaDaSemana;
 import Evolua.application.exception.planoDieta.PlanoDietaNaoEncontradoException;
 import Evolua.application.exception.usuario.UsuarioNaoEncontradoException;
@@ -180,5 +179,15 @@ public class PlanoDietaService {
         DiaDieta dia = plano.buscarDia(diaSemana);
 
         dia.removerRefeicao(refeicaoId);
+    }
+
+    public PlanoDietaResponse buscarPlanoAtivoPorUsuario(Long usuarioId){
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário com id: " + usuarioId + " não encontrado"));
+
+        PlanoDieta plano = planoDietaRepository.findByUsuarioAndAtivoTrue(usuario)
+                .orElseThrow(() -> new PlanoTreinoNaoEncontradoException("Usuario não possui plano ativo"));
+
+        return toPlanoDietaResponse(plano);
     }
 }

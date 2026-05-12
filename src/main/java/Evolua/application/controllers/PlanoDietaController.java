@@ -1,8 +1,10 @@
 package Evolua.application.controllers;
 
+import Evolua.application.config.JWTUserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -36,19 +38,19 @@ public class PlanoDietaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(plano);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{planoId}")
     public ResponseEntity<PlanoDietaResponse> buscarPlanoPorId(@PathVariable Long planoId){
         PlanoDietaResponse plano = planoDietaService.buscarPlanoPorId(planoId);
         return ResponseEntity.ok(plano);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{planoId}/atualizar")
     public ResponseEntity<PlanoDietaResponse> atualizarPlano(@PathVariable Long planoId, @RequestBody AtualizarPlanoDietaRequest request){
         PlanoDietaResponse plano = planoDietaService.atualizarPlano(planoId, request);
         return ResponseEntity.ok(plano);
     }
 
-    @PatchMapping("/{id}/desativar")
+    @PatchMapping("/{planoId}/desativar")
     public ResponseEntity<Void> desativarPlano(@PathVariable Long planoId){
         planoDietaService.desativarPlano(planoId);
         return ResponseEntity.noContent().build();
@@ -71,5 +73,11 @@ public class PlanoDietaController {
     public ResponseEntity<Void> removerRefeicao(@PathVariable Long id, @PathVariable DiaDaSemana diaSemana, @PathVariable Long refeicaoId){
         planoDietaService.removerRefeicao(id, diaSemana, refeicaoId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<PlanoDietaResponse>buscarDietaUsuarioLogado(@AuthenticationPrincipal JWTUserData usuarioLogado){
+        PlanoDietaResponse dieta = planoDietaService.buscarPlanoAtivoPorUsuario(usuarioLogado.usuarioId());
+        return ResponseEntity.ok(dieta);
     }
 }
